@@ -1,77 +1,81 @@
-# Importadora Rapiiflash · Sistema de pedidos
+# Rapiiflash · Sistema de pedidos para importadoras
 
-Sistema web de pedidos con tres vistas: **administrador**, **courier** y **cliente**. Funciona en computadora y celular. Los datos, las cuentas y las fotos se guardan en **Supabase** (proyecto `IMPORTADORA-RAPIIFLASH`) y la página se publica con **GitHub Pages**.
+Un solo sistema para **varios negocios**. Cada negocio tiene su administrador, sus couriers y sus clientes, con su propio logotipo y sus colores. Por encima de todos está el **super administrador**. Los datos, las cuentas y las fotos se guardan en **Supabase** (proyecto `IMPORTADORA-RAPIIFLASH`) y la página se publica con **GitHub Pages**.
 
 ## Enlaces
 
-| Vista | Enlace |
-|---|---|
-| Cliente | https://rodrigo9405.github.io/IMPORTADORA-RAPIIFLASH/#cliente |
-| Courier | https://rodrigo9405.github.io/IMPORTADORA-RAPIIFLASH/#courier |
-| Administrador | https://rodrigo9405.github.io/IMPORTADORA-RAPIIFLASH/#admin |
+- **Ingreso general:** https://rodrigo9405.github.io/IMPORTADORA-RAPIIFLASH/
+- **Ingreso con la marca de un negocio:** agrega `?n=` y el código del negocio, por ejemplo `https://rodrigo9405.github.io/IMPORTADORA-RAPIIFLASH/?n=rapiiflash`. El super administrador ve y copia este enlace en el resumen de cada negocio.
 
-Los tres enlaces abren la misma página; solo cambia la pestaña de ingreso que aparece elegida.
+## Ingreso
+
+Hay una sola pantalla de ingreso: **«Ingresa a tu cuenta»**. El sistema reconoce la cuenta y abre la vista que le corresponde.
+
+- **Correo + contraseña** → super administrador, administrador o courier.
+- **DNI + contraseña** → cliente. Si el mismo DNI es cliente de dos negocios, el sistema pregunta a cuál entrar. Desde el enlace con marca entra directo a ese negocio.
+- **Super administrador**: al escribir su correo aparece el campo **código de seguridad** de 4 dígitos. El código se comprueba en el servidor y vale 12 horas por sesión. Tras 5 códigos equivocados, se bloquea 15 minutos.
 
 ## Qué hace cada vista
 
-### Administrador (correo y contraseña)
-- **Inventario**: agregar, editar y eliminar productos con nombre, descripción y cantidad.
-- **Clientes**: crear, editar y eliminar clientes con DNI, nombres, apellidos y contraseña. Al crearlo, el sistema muestra un mensaje listo para copiar y enviarle al cliente (enlace, DNI y contraseña).
-- **Pedidos**: crear, editar y eliminar pedidos. Cada pedido tiene un cliente, una dirección de entrega, el tipo de envío (**motorizado** o **Shalom**) y productos del inventario.
-  - Al crear el pedido, la cantidad se **descuenta del inventario**. No deja pedir más de lo que hay.
-  - Al editarlo o eliminarlo antes de despacharlo, las unidades **vuelven al inventario**.
-  - Todo pedido nuevo queda como **Creado**.
-- En cada pedido ve **todo el proceso**: quién lo creó, empaquetó y cerró, con fecha y hora; **todas las fotos** (productos, paquete, motorizado o boleta) y la clave de Shalom.
+### Super administrador
+- **Negocios**: todos los negocios (activos, pausados, terminados) con su número de administradores, couriers, clientes, pedidos y productos.
+- **Cada negocio** tiene pestañas:
+  - **Resumen**: cifras, servicio y datos del negocio.
+  - **Pedidos, Inventario, Clientes**: lo mismo que ve su administrador, con permiso para crear, editar y eliminar.
+  - **Accesos**: correos y DNI de cada cuenta con su contraseña (botón del ojo). Desde aquí crea, edita y elimina administradores y couriers.
+- **Crear negocio**: elige si llena los datos él mismo o si los llena el administrador del negocio.
+  - Si los llena él: nombre, teléfono, RUC (opcional), Instagram (opcional), dirección, dueño, DNI, logotipo y paleta de colores.
+  - Si los llena el administrador: crea su cuenta. Al ingresar, el administrador completa esos datos una sola vez. Después solo el super puede verlos y editarlos.
+- **Servicio de cada negocio** (solo lo ve el super): fecha de creación, fecha de inicio, y los botones pausar, reanudar, terminar y comenzar de nuevo, con su historial. **Pausar o terminar bloquea todas las cuentas del negocio** (administradores, couriers y clientes). Al reanudar se desbloquean.
+- **Eliminar negocio**: borra todo lo del negocio. Para confirmar hay que escribir su nombre.
 
-### Courier (correo y contraseña)
-- Ve los pedidos **por empaquetar** (creados) y **por despachar** (empaquetados).
-- En un pedido creado presiona **Empaquetar**: ve los productos y cantidades, la dirección, el nombre y el DNI del cliente.
-  - Sube una o más fotos en **Evidencia de productos** y en **Evidencia de pedido empaquetado** (con la cámara o desde la galería).
-  - Presiona **Pedido empaquetado**: el pedido pasa a **Empaquetado**.
-- Al volver a entrar al pedido:
-  - **Motorizado**: sube una o más fotos del motorizado con el pedido y presiona **Cerrar pedido**.
-  - **Shalom**: sube la foto de la boleta, escribe la **clave de Shalom** y presiona **Cerrar pedido**.
-- Los pedidos cerrados desaparecen de su lista.
+### Administrador (de un negocio)
+- **Inventario**: productos con nombre, descripción y cantidad.
+- **Clientes**: DNI, nombres, apellidos y contraseña. Al crear un cliente sale un mensaje listo para copiar con el enlace de su negocio.
+- **Pedidos**:
+  - Cada pedido lleva cliente, dirección, envío (motorizado o Shalom), **vendedor (courier)** y productos con **precio opcional**.
+  - El stock se descuenta al crear el pedido y vuelve al inventario si lo editas o eliminas antes de despacharlo.
+  - Cada negocio tiene su propia numeración.
+- **Boleta**: se genera sola con cada pedido. Lleva el logotipo, el nombre, el RUC, la dirección, el teléfono y el Instagram del negocio, además del cliente, el vendedor y el detalle con importes. Se imprime o se guarda en PDF.
 
-### Cliente (DNI y contraseña)
-- Ve sus **pedidos actuales** y su **historial**.
-- En cada pedido ve los productos que pidió y el avance.
-- Si fue por motorizado, ve la **foto del motorizado** con su pedido.
-- Si fue por Shalom, ve la **foto de la boleta** y la **clave de recojo**.
-- No ve las fotos internas del empaquetado.
+### Courier
+- Ve los pedidos por empaquetar y por despachar de su negocio.
+- Sube las fotos de productos y del paquete, y marca el pedido como empaquetado.
+- Luego sube la foto con el motorizado, o la boleta de Shalom con su clave, y cierra el pedido.
+
+### Cliente
+- Ve sus pedidos actuales y su historial, con su boleta, la foto del motorizado o la boleta de Shalom y la clave de recojo.
+
+> La boleta es un documento interno del pedido. **No es un comprobante electrónico SUNAT.** Para emitir comprobantes válidos ante SUNAT haría falta conectar un proveedor (OSE/PSE).
 
 ## Seguridad
-- Las reglas de la base de datos (RLS) deciden qué ve cada cuenta. La clave pública en `js/config.js` **sí puede estar en el código**.
-- Las fotos están en un depósito **privado** (`evidencias`). Se muestran con enlaces temporales de 1 hora.
-- Las cuentas de clientes las crea la función `usuarios` (Supabase Edge Function), que solo responde a un administrador conectado.
-- **Recomendado**: en Supabase ve a **Authentication → Sign In / Providers → Email** y desactiva **Allow new users to sign up**. Aunque alguien se registrara, no vería nada, pero así nadie puede crearse una cuenta.
-- Nunca pongas la clave `service_role` o `secret` en este repositorio.
+- Las reglas de la base de datos (RLS) separan los negocios: ninguna cuenta ve datos de otro negocio.
+- Las contraseñas que ve el super se guardan **cifradas**. La llave de cifrado está en Supabase Vault. Las cuentas creadas antes de esta versión aparecen como «Sin registrar» hasta que se les pone una contraseña nueva.
+- Las fotos de evidencia están en un depósito privado. Los logotipos están en un depósito público, porque salen en las boletas.
+- La clave pública de `js/config.js` sí puede estar en el código. Nunca subas la clave `service_role` ni la `secret`.
+- **Recomendado**: en Supabase, ve a **Authentication → Sign In / Providers → Email** y desactiva **Allow new users to sign up**.
 
-## Agregar otro courier o administrador
-Esas cuentas no se crean desde la web. Sigue los pasos de [`supabase/02_personal.sql`](supabase/02_personal.sql).
+## Instalación desde cero (otro proyecto de Supabase)
+1. En **SQL Editor**, ejecuta en orden `supabase/01_esquema.sql` y `supabase/03_multinegocio.sql`.
+2. Publica la función `supabase/functions/usuarios` con la verificación JWT **desactivada**: la función comprueba por sí misma quién la llama.
+3. Crea al super administrador:
+   - Llama una vez a la función con `{"accion":"alta_super","email":"…","password":"…"}`. Solo funciona si todavía no existe ninguno.
+   - Luego ejecuta en SQL:
+     `insert into superadmins (user_id, email, codigo_hash) select id, email, extensions.crypt('CÓDIGO', extensions.gen_salt('bf')) from auth.users where email = '…';`
+4. En `js/config.js` pon la URL y la clave pública del proyecto, y en `superHash` la huella SHA-256 del correo del super, en minúsculas.
 
 ## Archivos
 
 ```
-index.html                         Página principal
-css/estilos.css                    Estilos (modo claro y oscuro)
-js/config.js                       Dirección y clave pública de Supabase
-js/app.js                          Lógica de las tres vistas
-img/icono.svg                      Ícono
-supabase/01_esquema.sql            Tablas, reglas de acceso, stock, estados y fotos
-supabase/02_personal.sql           Agregar couriers o administradores
-supabase/functions/usuarios/       Función que crea, edita y elimina cuentas de clientes
+index.html                       Página principal
+css/estilos.css                  Estilos (colores de cada negocio, modo claro y oscuro, impresión de boleta)
+js/config.js                     Conexión con Supabase
+js/app.js                        Lógica de las cuatro vistas
+supabase/01_esquema.sql          Tablas base, stock, estados y fotos
+supabase/03_multinegocio.sql     Negocios, super administrador, accesos cifrados y boletas
+supabase/functions/usuarios/     Cuentas de clientes, administradores y couriers; servicio del negocio
 ```
 
-## Cómo se guarda cada cosa
-- **Estados del pedido**: `creado` → `empaquetado` → `cerrado`. Solo avanzan con los botones del courier y solo si tienen las fotos requeridas.
-- **Fotos**: se reducen en el celular antes de subir (máx. 1600 px) para que suban rápido y ocupen poco.
-- **Clientes eliminados**: sus pedidos se quedan en el sistema con su nombre y DNI.
-- **Productos eliminados**: los pedidos que ya los tenían los siguen mostrando.
-
 ## Límites del plan gratis de Supabase
-- 500 MB de base de datos y 1 GB de fotos (con fotos reducidas, alcanza para miles).
+- 500 MB de base de datos y 1 GB de archivos. Las fotos se reducen antes de subir.
 - Si el proyecto pasa una semana sin uso, Supabase lo pausa. Se reactiva desde el panel.
-
-## Probarlo en tu computadora
-En la carpeta del proyecto ejecuta `python3 -m http.server 8080` y entra a `http://localhost:8080`.
